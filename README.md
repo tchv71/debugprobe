@@ -1,3 +1,40 @@
+# Debugprobe rp2040-zero
+
+It's port of debugprobe for cheap ~2$ board with extra support of on-board rgb led.
+
+### Done:
+- Fix problem with not working firmware after upload and reset. PICO_XOSC_STARTUP_DELAY_MULTIPLIER is solution.
+- Change ports for easy access
+- Add built-in led support
+
+### Pinout:
+```
+GP8     TX
+GP9     RX
+GP10    SWCLK
+GP11    SWDIO
+GP12    GND
+GP13    GND
+GP14    3V3
+```
+
+![probe_image](img/img1.jpg)
+
+![probe_image](img/img2.jpg)
+
+### Led legend:
+- Dimm red: power on, bright red: usb comm.
+- Green: Flashing/Debugging
+- Blue: RX Serial
+
+### How to make it
+If you wanna compile it, follow the guidelines in chapter 'Hacking' below and compile with "cmake -DDEBUG_ON_ZERO=ON ..".
+Binary uf2 is for download in relese tab. Connecting pins GP13/GP14 to gnd/3v3 is optional if you want use board as power supply.
+
+### Links
+- [Information about the RP2040-Zero board with pinouts](https://www.waveshare.com/wiki/RP2040-Zero)
+- [3D model of case](https://www.thingiverse.com/thing:6832908)
+
 # Debugprobe
 
 Firmware source for the Raspberry Pi Debug Probe SWD/UART accessory. Can also be run on a Raspberry Pi Pico or Pico 2.
@@ -18,7 +55,7 @@ For the purpose of making changes or studying of the code, you may want to compi
 
 First, clone the repository:
 ```bash
-git clone https://github.com/raspberrypi/debugprobe
+git clone https://github.com/tchv71/debugprobe
 cd debugprobe
 ```
 
