@@ -1,4 +1,7 @@
 build
 !.vscode/*
+<<<<<<< HEAD
 .cache
 .vscode
+=======
+>>>>>>> Original
