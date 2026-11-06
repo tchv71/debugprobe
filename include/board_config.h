@@ -31,9 +31,6 @@
 #include "board_debug_probe_config.h"
 #elif defined(RASPBERRYPI_PICO) || defined(RASPBERRYPI_PICO2)
 #include "board_pico_config.h"
-#elif defined(DEBUG_ON_ZERO)
-#include "board_rp2040-zero.h"
-#include "led.h"
 #else
 #error Unsupported board
 //#include "board_example_config.h"

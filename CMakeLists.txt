@@ -1,23 +1,9 @@
-# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
-if(WIN32)
-    set(USERHOME $ENV{USERPROFILE})
-else()
-    set(USERHOME $ENV{HOME})
-endif()
-set(sdkVersion 2.3.1)
-set(toolchainVersion 15_2_Rel1)
-set(picotoolVersion 2.3.1)
-set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
-if (EXISTS ${picoVscode})
-    include(${picoVscode})
-endif()
-# ====================================================================================
 cmake_minimum_required(VERSION 3.12)
 
 # build for the Raspberry Pi Debug Probe by default
-set(PICO_BOARD pico CACHE STRING "Board type")
-set(DEBUG_ON_ZERO ON CACHE BOOL "Включить отладочный режим")
-set(CMAKE_BUILD_TYPE Release)
+set(PICO_BOARD debug_probe CACHE STRING "Board type")
+
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 include(pico_sdk_import.cmake)
 
@@ -30,7 +16,6 @@ pico_sdk_init()
 
 add_executable(debugprobe
         src/probe_config.c
-        src/led.c
         src/main.c
         src/usb_descriptors.c
         src/probe.c
@@ -40,8 +25,6 @@ add_executable(debugprobe
         src/tusb_edpt_handler.c
         src/autobaud.c
 )
-
-pico_generate_pio_header(debugprobe ${CMAKE_CURRENT_LIST_DIR}/src/ws2812.pio OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
 
 target_sources(debugprobe PRIVATE
         CMSIS_DAP/CMSIS/DAP/Firmware/Source/DAP.c
@@ -65,29 +48,26 @@ pico_generate_pio_header(debugprobe ${CMAKE_CURRENT_LIST_DIR}/src/autobaud.pio)
 
 target_include_directories(debugprobe PRIVATE src)
 
+# add version
+add_custom_target(version
+        ${CMAKE_SOURCE_DIR}/get-version.sh
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
 target_include_directories(debugprobe PRIVATE
         ${CMAKE_BINARY_DIR}/generated
         )
 
+add_dependencies(debugprobe version)
+
 target_compile_definitions (debugprobe PRIVATE
 	PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1
     PICO_ENABLE_USB_RESET_VIA_VENDOR_INTERFACE=1
-    PICO_XOSC_STARTUP_DELAY_MULTIPLIER=32  #Fix for rp2040-zero board
 )
 
 if (NOT PICO_BOARD STREQUAL "debug_probe")
     set_target_properties(debugprobe PROPERTIES
         OUTPUT_NAME "debugprobe_on_${PICO_BOARD}"
-    )
-endif ()
-
-option (DEBUG_ON_ZERO "Compile firmware for the RP2040-Zero instead of Debug Probe" OFF)
-if (DEBUG_ON_ZERO)
-    target_compile_definitions (debugprobe PRIVATE 
-	DEBUG_ON_ZERO=1
-    )
-    set_target_properties(debugprobe PROPERTIES 
-        OUTPUT_NAME "debugprobe_on_rp2040-zero"
     )
 endif ()
 

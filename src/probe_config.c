@@ -1,6 +1,5 @@
 #include "probe_config.h"
 #include "pico/binary_info.h"
-#include <pico/stdlib.h>
 #include "probe/version.h"
 
 #define STR_HELPER(x) #x
