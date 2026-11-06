@@ -15,7 +15,7 @@ endif()
 cmake_minimum_required(VERSION 3.12)
 
 # build for the Raspberry Pi Debug Probe by default
-set(PICO_BOARD debug_probe CACHE STRING "Board type")
+set(PICO_BOARD pico CACHE STRING "Board type")
 set(DEBUG_ON_PICO ON CACHE BOOL "Включить отладочный режим")
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
